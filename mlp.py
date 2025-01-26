@@ -20,10 +20,10 @@ class XR_dataset(dataset):
     return len(self.data)
 
 class mlp():
-  pass
+    pass
 
 def trainmodel():
-	pass
+    pass
 
 #饿了先吃个饭
 #等会再写
