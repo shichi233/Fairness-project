@@ -39,18 +39,44 @@ annotation_file = "/Users/weidai/Desktop/dataforsciencefair/brixia/annotation_tr
 img_dir = "/Users/weidai/Desktop/dataforsciencefair/brixia"
 
 
-if __name__ == '__main__':
-    dataset = COVIDRayDataset(annotation_file, img_dir, transform=transform)
-    dataloader = DataLoader(dataset, batch_size=128, shuffle=True, num_workers=4)
+dataset = CovidRayDataset(annotation_file, img_dir, transform=transform)
+dataloader = DataLoader(dataset, batch_size=128, shuffle=True, num_workers=4)
 
 class CovidVit(nn.Module):
     def __init__(self):
-        self.vit = models.vit_b_16(pretrained=True)
-        self.vit.heads = nn.Linear(self.vit.hidden_im, 1)
-        def forward(self, x):
-            return self.vit(x).squeeze()
+        super(CovidVit, self).__init__()
+        self.vit = models.vit_b_16(weights=models.ViT_B_16_Weights.IMAGENET1K_V1)
+        self.vit.heads = nn.Linear(self.vit.heads.head.in_features, 1)
+        self.sigmoid = nn.Sigmoid()
+    def forward(self, x):
+        x = self.vit(x)
+        x = self.sigmoid(x)
+        x = x * 18
+        return x.squeeze()
+def train_model(model, dataloader, epochs=10, lr=1e-4, device="mps"):
+    model.to(device)
+    criterion = nn.MSELoss()
+    optimizer = optim.Adam(model.parameters(), lr=lr)
+    scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', patience=3, factor=0.5)
+    for epoch in range(epochs):
+        model.train()
+        for images, labels in dataloader:
+            images, labels = images.to(device), labels.to(device)
 
-def train_model(model)
+            optimizer.zero_grad()
+            outputs = model(images)
+
+            loss = criterion(outputs, labels)
+            loss.backward()
+            optimizer.step()
+            print(loss.item())
+    return model
+
+if __name__ == '__main__':
+    model = CovidVit()
+    trained_model = train_model(model, dataloader, epochs=10, lr=1e-4, device="mps")
+    torch.save(trained_model.state_dict(), "/Users/weidai/Desktop/model/vit.pth")
+
 
 
 

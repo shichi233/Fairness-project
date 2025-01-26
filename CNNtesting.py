@@ -78,3 +78,6 @@ if __name__ == '__main__':
             optimizer.step()
             rloss += loss.item()
             print(loss.item())
+
+    save_path = "/Users/weidai/Desktop/model/cnn.pth"
+    torch.save(model.state_dict(), save_path)
