@@ -89,7 +89,13 @@ def train_model(model, dtld, crt, opt, epochs): #varchange: dataloader, criterio
             loss.backward()
             opt.step()
 
-            running_loss += loss.item()
+            running_loss += loss.item()   
+            batch_mae = torch.abs(outputs.squeeze() - labels).mean()
+            running_mae += batch_mae.item() * labels.size(0)
+            total_samples += labels.size(0)
+            
+        avg_loss = running_loss / len(dtld)
+        avg_mae = running_mae / total_samples
 
         print(f"Epoch [{epoch+1}/{epochs}], Loss: {running_loss/len(dtld):.4f}")
 #===============================================================================================
