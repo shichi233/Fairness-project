@@ -48,7 +48,7 @@ img_dir = r"C:\Users\frank\Documents\science fair 2025\brixia"
 
 dataset = CovidRayDataset(annotation_file, img_dir, transform = transform)
 
-dataloader = DataLoader(dataset, batch_size=128, shuffle=True, num_workers=4)
+dtld = DataLoader(dataset, batch_size=128, shuffle=True, num_workers=4)
 #===============================================================================================
 
 # model
