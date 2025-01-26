@@ -8,8 +8,8 @@ from sklearn.metrics import accuracy_score
 import numpy as np
 import pandas as pd
 from PIL import Image
-
-class XR_dataset(dataset):
+#===========================================================================================
+class XR_dataset(Dataset):
   
   def __init__ (self, data, label, transform = False):
     self.data = data
@@ -19,11 +19,25 @@ class XR_dataset(dataset):
   def getlen(self):
     return len(self.data)
 
-class mlp():
-    pass
-
+  def getitem(self, idx):
+    image = image.open(self.date[idx].convert("RGB"))
+    label = self.labels[idx]
+    
+    if self.transform == True:
+        image = self.transform(image)
+    return label, image
+#===========================================================================================
+class MLP(nn.module):
+    
+    def __init__(self, in_s, hd_s, ot_s):
+        super(MLP, self).__init__()#indeed, I reached out to GPT for help for this part
+        
+#===========================================================================================
+def setup():
+    #where the hell do I get the image???
+#===========================================================================================
 def trainmodel():
     pass
-
-#饿了先吃个饭
-#等会再写
+#===========================================================================================  
+setup()
+trainmodel()
