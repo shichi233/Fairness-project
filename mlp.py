@@ -97,7 +97,7 @@ def train_model(model, dtld, crt, opt, epochs): #varchange: dataloader, criterio
         avg_loss = running_loss / len(dtld)
         avg_mae = running_mae / total_samples
 
-        print(f"Epoch [{epoch+1}/{epochs}], Loss: {running_loss/len(dtld):.4f}")
+        print(f"Epoch [{epoch+1}/{epochs}], Loss: {avg_loss:.4f}, MAE: {avg_mae:.4f}")
 #===============================================================================================
 
 
