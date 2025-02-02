@@ -72,7 +72,7 @@ def train_model(model, dataloader, epochs=10, lr=1e-4, device="mps"):
             print(loss.item())
     return model
 
-def evaluate_mae(model, dataloader, device="mps"):
+def mae(model, dataloader, device="mps"):
     model.to(device)
     model.eval()
     
@@ -96,6 +96,6 @@ if __name__ == '__main__':
     model = CovidVit()
     trained_model = train_model(model, dataloader, epochs=10, lr=1e-4, device="mps")
 
-    evaluate_mae(trained_model, dataloader, device="mps")
+    mae(trained_model, dataloader, device="mps")
 
     torch.save(trained_model.state_dict(), "/Users/weidai/Desktop/model/vit.pth")
