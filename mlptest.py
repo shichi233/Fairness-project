@@ -88,12 +88,22 @@ def train_model(model, dtld, crt, opt, epochs):  # varchange: dataloader, criter
             outputs = model(images)
             loss = crt(outputs.squeeze(), labels)
 
+            sq_error = torch.sum((outputs.squeeze() - labels) ** 2)
+            ab_error = torch.sum(torch.abs(outputs.squeeze() - labels))
+            
             opt.zero_grad()
             loss.backward()
             opt.step()
             print(loss.item())
+            
+            total_sq_error += sq_error.item()
+            total_ab_error += ab_error.item()
+            total_samples += labels.size(0)
 
+        avg_mse = total_sq_error / total_samples
+        avg_mae = total_ab_error / total_samples
 
+        print(f"Epoch [{epoch+1}/{epochs}], MSE: {avg_mse:.4f}, MAE: {avg_mae:.4f}")
 # ===============================================================================================
 
 
