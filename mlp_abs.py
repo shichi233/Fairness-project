@@ -103,8 +103,8 @@ def train_model(model, dtld, crt, opt, epochs):
         print(f"Epoch [{epoch+1}/{epochs}], Loss: {avg_loss:.4f}")
 
 #======================================================================================
-# Evaluation Function
-def evaluate_abs_error(model, dtld):
+
+def mae(model, dtld):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
     model.eval()
@@ -121,13 +121,13 @@ def evaluate_abs_error(model, dtld):
             images = images.view(images.size(0), -1) 
 
             outputs = model(images).squeeze()
-            abs_error = torch.sum(torch.abs(outputs - labels)).item()
+            abs_error = torch.abs(outputs - labels) 
 
-            total_abs_error += abs_error
+            total_abs_error += abs_error.sum().item()  
             total_samples += labels.size(0)
 
-    avg_abs_error = total_abs_error / total_samples
-    print(f"Final MAE after training: {avg_abs_error:.4f}")
+    avg_mae = total_abs_error / total_samples  
+    print(f"Final MAE after training: {avg_mae:.4f}")
 
 #======================================================================================
 # Main Script
@@ -141,7 +141,7 @@ if __name__ == '__main__':
     opt = optim.Adam(model.parameters(), lr=0.001)
 
     train_model(model, dataloader, crt, opt, epochs=10)
-    evaluate_abs_error(model, dataloader)
+    mae(model, dataloader)
 
     save_path = "/Users/weidai/Desktop/model/mlp.pth"
     torch.save(model.state_dict(), save_path)
