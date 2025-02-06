@@ -5,6 +5,7 @@ from torch.utils.data import Dataset, DataLoader
 from PIL import Image
 import json
 import os
+import torch.optim as optim
 
 
 class COVIDRayDataset(Dataset):
@@ -119,8 +120,11 @@ class VisionTransformer(nn.Module):
 
 transform = transforms.Compose([
     transforms.Resize((224, 224)),
+    transforms.RandomHorizontalFlip(), 
+    transforms.RandomRotation(10),      
+    transforms.ColorJitter(brightness=0.2, contrast=0.2),  
     transforms.ToTensor(),
-    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+    transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])  
 ])
 
 annotation_file = "C:/Users/frank/Documents/science fair 2025/brixia/annotation_test2.jsonl"
@@ -129,6 +133,9 @@ img_dir = "C:/Users/frank/Documents/science fair 2025/brixia"
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = VisionTransformer().to(device)
 
+optimizer = optim.AdamW(model.parameters(), lr=3e-5, weight_decay=1e-4)
+scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=10)
+
 checkpoint = torch.load("C:/Users/frank/Documents/science fair 2025/vit.pth", map_location=device, weights_only=True)
 model.load_state_dict(checkpoint)
 
@@ -136,7 +143,7 @@ model.eval()
 
 if __name__ == '__main__':
     dataset = COVIDRayDataset(annotation_file, img_dir, transform=transform)
-    dataloader = DataLoader(dataset, batch_size=32, shuffle=True, num_workers=4)
+    dataloader = DataLoader(dataset, batch_size=64, shuffle=True, num_workers=4) #batch size我试过微调，用处不大
 
     sum_abs_error = 0
     total_samples = 0
@@ -151,4 +158,3 @@ if __name__ == '__main__':
 
     mean_abs_error = sum_abs_error / total_samples
     print(f"Mean Absolute Error: {mean_abs_error:.4f}")
-
