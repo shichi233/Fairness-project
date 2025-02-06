@@ -49,32 +49,29 @@ transform = transforms.Compose([
     transforms.Normalize(mean=[0.5], std=[0.5])
 ])
 
-annotation_file = "C:/Users/frank/Documents/science fair 2025/brixia/annotation_train.jsonl"
+annotation_file = "C:/Users/frank/Documents/science fair 2025/brixia/annotation_test2.jsonl"
 img_dir = "C:/Users/frank/Documents/science fair 2025/brixia"
 
 class CovidMLP(nn.Module):
     def __init__(self):
         super(CovidMLP, self).__init__()
-        input_size = 224 * 224 * 3  
+        input_size = 224 * 224 * 3 
         self.fc1 = nn.Linear(input_size, 512)
         self.relu = nn.ReLU()
         self.fc2 = nn.Linear(512, 512)
-        self.fc3 = nn.Linear(512, 1)
-        self.sigmoid = nn.Sigmoid()
+        self.fc3 = nn.Linear(512, 1)  
 
     def forward(self, x):
         x = self.fc1(x)
         x = self.relu(x)
         x = self.fc2(x)
         x = self.relu(x)
-        x = self.fc3(x)
-        x = self.sigmoid(x) * 18 
-        return x.view(-1)
+        x = self.fc3(x)  
+        return x
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = CovidMLP()
 model.load_state_dict(torch.load("C:/Users/frank/Documents/science fair 2025/mlp.pth", weights_only=True))
-model.to(device)
 model.eval()
 
 if __name__ == '__main__':
@@ -95,4 +92,5 @@ if __name__ == '__main__':
 
     mean_abs_error = sum_abs_error / le
     print(mean_abs_error)
+
 
