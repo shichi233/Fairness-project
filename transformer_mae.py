@@ -143,7 +143,7 @@ model.eval()
 
 if __name__ == '__main__':
     dataset = COVIDRayDataset(annotation_file, img_dir, transform=transform)
-    dataloader = DataLoader(dataset, batch_size=16, shuffle=True, num_workers=4) #batch size我试过微调，用处不大
+    dataloader = DataLoader(dataset, batch_size=16, shuffle=True, num_workers=4)
 
     sum_abs_error = 0
     total_samples = 0
