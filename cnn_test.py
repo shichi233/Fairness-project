@@ -47,22 +47,28 @@ img_dir = "/Users/weidai/Desktop/dataforsciencefair/brixia"
 
 
 class CovidCNN(nn.Module):
-    def __init__(self):
+    def __init__(self, task = "regression"):
         super(CovidCNN, self).__init__()
 
         self.cnn = resnet18(weights=ResNet18_Weights.IMAGENET1K_V1)
-        self.cnn.fc = nn.Linear(self.cnn.fc.in_features, 1)
+        num_features = self.cnn.fc.in_features
+        self.cnn.fc = nn.Identity()
+        self.fc1 = nn.Linear(num_features, 1)
+        self.fc2 = nn.Linear(num_features, 3)
         self.sigmoid = nn.Sigmoid()
+        self.task = task
 
     def forward(self,x):
-        x = self.cnn(x)
-        x = self.sigmoid(x)
-        x = x.view(-1)
-        x = x * 18
-        return x
+        features = self.cnn(x)
+        if self.task == "regression":
+            out = self.fc1(features)
+            out = self.sigmoid(out).view(-1) * 18
+        elif self.task == "classification":
+            out = self.fc2(features)
+        return out
 
 model = CovidCNN()
-model.load_state_dict(torch.load("/Users/weidai/Desktop/model/cnn.pth", weights_only=True))
+model.load_state_dict(torch.load("/Users/weidai/Desktop/model/shichi.pth", weights_only=True))
 model.eval()
 
 
