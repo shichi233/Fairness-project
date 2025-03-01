@@ -58,7 +58,7 @@ class CovidCNN(nn.Module):
         return out
 
 model = CovidCNN()
-model.load_state_dict(torch.load("/Users/weidai/Desktop/model/shichi.pth", weights_only=True))
+model.load_state_dict(torch.load("/Users/weidai/Desktop/model/age2.pth", weights_only=True))
 model.eval()
 
 
@@ -109,14 +109,5 @@ if __name__ == '__main__':
     print(me3 / le3)
     print(me4 / le4)
     print(me5 / le5)
-
-
-
-
-
-
-
-
-
 
 
