@@ -16,7 +16,7 @@ class BrixiaDataset(Dataset):
         with open(annotation_file, "r", encoding="utf-8") as f:
             for line in f:
                 record = json.loads(line.strip())
-                if 1 <= record.get("age_group", 0) <= 4:
+                if 16 <= record.get("age_group", 0) <= 18:
                     self.data.append(record)
 
     def __len__(self):
@@ -115,27 +115,27 @@ if __name__ == '__main__':
     dataloader2 = DataLoader(dataset2, batch_size=128, shuffle=True, num_workers=4)
     device = torch.device("mps")
 
-    age2 = CovidCNN().to(device)
-    age2.load_state_dict(torch.load("/Users/weidai/Desktop/model/shichi.pth", weights_only=True, map_location=device))
-    optimizer = torch.optim.Adam(age2.parameters(), 0.0001)
+    age3 = CovidCNN().to(device)
+    age3.load_state_dict(torch.load("/Users/weidai/Desktop/model/shichi.pth", weights_only=True, map_location=device))
+    optimizer = torch.optim.Adam(age3.parameters(), 0.0001)
     criterion_regression = nn.MSELoss()
     criterion_classification = nn.CrossEntropyLoss()
 
     for epoch in range (10):
-        age2.train()
-        age2.task = "regression"
+        age3.train()
+        age3.task = "regression"
         for image, scores in dataloader1:
             image, scores = image.to(device), scores.to(device)
             optimizer.zero_grad()
-            output = age2(image)
+            output = age3(image)
             loss1 = criterion_regression(output, scores)
             loss1.backward()
             optimizer.step()
             print(loss1.item())
 
 
-    save_path = "/Users/weidai/Desktop/model/age2.pth"
-    torch.save(age2.state_dict(), save_path)
+    save_path = "/Users/weidai/Desktop/model/age5.pth"
+    torch.save(age3.state_dict(), save_path)
 
 
 

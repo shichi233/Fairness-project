@@ -58,7 +58,7 @@ class CovidCNN(nn.Module):
         return out
 
 model = CovidCNN()
-model.load_state_dict(torch.load("/Users/weidai/Desktop/model/age2.pth", weights_only=True))
+model.load_state_dict(torch.load("/Users/weidai/Desktop/model/age5.pth", weights_only=True))
 model.eval()
 
 
