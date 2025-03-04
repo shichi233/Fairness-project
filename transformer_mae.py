@@ -127,8 +127,8 @@ transform = transforms.Compose([
     transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])  
 ])
 
-annotation_file = "C:/Users/frank/Documents/science fair 2025/brixia/annotation_test2.jsonl"
-img_dir = "C:/Users/frank/Documents/science fair 2025/brixia"
+annotation_file = "/Users/weidai/Desktop/dataforsciencefair/brixia/annotation_test.jsonl"
+img_dir = "/Users/weidai/Desktop/dataforsciencefair/brixia"
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = VisionTransformer().to(device)
@@ -136,7 +136,7 @@ model = VisionTransformer().to(device)
 optimizer = optim.AdamW(model.parameters(), lr=3e-5, weight_decay=1e-4)
 scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=10)
 
-checkpoint = torch.load("C:/Users/frank/Documents/science fair 2025/vit.pth", map_location=device, weights_only=True)
+checkpoint = torch.load("/Users/weidai/Desktop/model/vit.pth", map_location=device, weights_only=True)
 model.load_state_dict(checkpoint)
 
 model.eval()

@@ -49,8 +49,8 @@ transform = transforms.Compose([
     transforms.Normalize(mean=[0.5], std=[0.5])
 ])
 
-annotation_file = "C:/Users/frank/Documents/science fair 2025/brixia/annotation_test2.jsonl"
-img_dir = "C:/Users/frank/Documents/science fair 2025/brixia"
+annotation_file = "/Users/weidai/Desktop/dataforsciencefair/brixia/annotation_test.jsonl"
+img_dir = "/Users/weidai/Desktop/dataforsciencefair/brixia"
 
 class CovidMLP(nn.Module):
     def __init__(self):

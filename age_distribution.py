@@ -57,10 +57,7 @@ class CovidCNN(nn.Module):
 
 
 
-def test(model):
-    device = torch.device("mps")
-    model = model.to(device)
-    model.eval()
+if __name__ == '__main__':
     annotation_file = "/Users/weidai/Desktop/dataforsciencefair/brixia/annotation_test.jsonl"
     img_dir = "/Users/weidai/Desktop/dataforsciencefair/brixia"
 
@@ -72,48 +69,20 @@ def test(model):
     sum3 = 0
     sum4 = 0
     sum5 = 0
-    le1 = 0
-    le2 = 0
-    le3 = 0
-    le4 = 0
-    le5 = 0
     for image, scores, age in dataloader:
-        image = image.to(device)
-        output = model(image).squeeze().cpu()
-        abs_error = torch.abs(output - scores)
-        me = output - scores
         for i, a in enumerate(age):
             if 1 <= a < 4:
-                sum1 += abs_error[i].item()
-                me1 = me[i].item()
-                le1 += 1
+                sum1 += 1
             elif 4 <= a < 8:
-                sum2 += abs_error[i].item()
-                me2 = me[i].item()
-                le2 += 1
+                sum2 += 1
             elif 8 <= a < 12:
-                sum3 += abs_error[i].item()
-                me3 = me[i].item()
-                le3 += 1
+                sum3 += 1
             elif 12 <= a < 16:
-                sum4 += abs_error[i].item()
-                me4 = me[i].item()
-                le4 += 1
+                sum4 += 1
             elif 16 <= a <= 18:
-                sum5 += abs_error[i].item()
-                me5 = me[i].item()
-                le5 += 1
-    print("mae are")
-    print(sum2 / le2)
-    print(sum3 / le3)
-    print(sum4 / le4)
-    print(sum5 / le5)
-    print(me2 / le2)
-    print(me3 / le3)
-    print(me4 / le4)
-    print(me5 / le5)
+                sum5 += 1
+    print()
 
 
-if __name__ == '__main__':
     model = CovidCNN()
     model.load_state_dict(torch.load("/Users/weidai/Desktop/model/age2.pth", weights_only=True))

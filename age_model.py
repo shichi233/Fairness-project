@@ -6,6 +6,7 @@ from torch.utils.data import Dataset, DataLoader
 from PIL import Image
 import json
 import os
+from cnn_age_test import test
 
 class BrixiaDataset(Dataset):
     def __init__(self, annotation_file, img_dir, transform=None):
@@ -16,7 +17,7 @@ class BrixiaDataset(Dataset):
         with open(annotation_file, "r", encoding="utf-8") as f:
             for line in f:
                 record = json.loads(line.strip())
-                if 16 <= record.get("age_group", 0) <= 18:
+                if 16 < record.get("age_group", 0) <= 18:
                     self.data.append(record)
 
     def __len__(self):
@@ -106,7 +107,6 @@ class CovidCNN(nn.Module):
 
 
 
-
 if __name__ == '__main__':
     dataset1 = BrixiaDataset(annotation_file1, img_dir1, transform=transform)
     dataset2 = PneumoniaDataset(annotation_file2, img_dir2, transform=transform)
@@ -121,7 +121,7 @@ if __name__ == '__main__':
     criterion_regression = nn.MSELoss()
     criterion_classification = nn.CrossEntropyLoss()
 
-    for epoch in range (10):
+    for epoch in range (2):
         age3.train()
         age3.task = "regression"
         for image, scores in dataloader1:
@@ -131,17 +131,12 @@ if __name__ == '__main__':
             loss1 = criterion_regression(output, scores)
             loss1.backward()
             optimizer.step()
-            print(loss1.item())
+            print("loss:" + str(loss1.item()))
+        print("\n")
+        test(age3)
 
 
     save_path = "/Users/weidai/Desktop/model/age5.pth"
     torch.save(age3.state_dict(), save_path)
-
-
-
-
-
-
-
 
 
