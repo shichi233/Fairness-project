@@ -71,7 +71,7 @@ class CovidMLP(nn.Module):
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = CovidMLP()
-model.load_state_dict(torch.load("C:/Users/frank/Documents/science fair 2025/mlp.pth", weights_only=True))
+model.load_state_dict(torch.load("/Users/weidai/Desktop/model/mlp.pth", weights_only=True))
 model.eval()
 
 if __name__ == '__main__':

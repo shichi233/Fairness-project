@@ -153,6 +153,7 @@ if __name__ == '__main__':
             images, scores = images.to(device), scores.to(device)
             outputs = model(images).squeeze()
             abs_error = torch.abs(outputs - scores)
+            print(outputs)
             sum_abs_error += abs_error.sum().item()
             total_samples += scores.size(0)
 
