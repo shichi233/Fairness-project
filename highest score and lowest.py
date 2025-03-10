@@ -15,7 +15,7 @@ class COVIDRayDataset(Dataset):
         with open(annotation_file, "r", encoding="utf-8") as f:
             for line in f:
                 record = json.loads(line.strip())
-                if 8 < record.get("age_group", 0) <= 12:
+                if 12 < record.get("age_group", 0) <= 16:
                     self.data.append(record)
     def __len__ (self):
         return len(self.data)
@@ -70,7 +70,7 @@ class CovidCNN(nn.Module):
         return out
 
 model = CovidCNN()
-model.load_state_dict(torch.load("/Users/weidai/Desktop/model/age3.pth", weights_only=True))
+model.load_state_dict(torch.load("/Users/weidai/Desktop/model/age4.pth", weights_only=True))
 model.eval()
 
 
