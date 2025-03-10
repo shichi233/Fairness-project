@@ -15,7 +15,7 @@ class COVIDRayDataset(Dataset):
         with open(annotation_file, "r", encoding="utf-8") as f:
             for line in f:
                 record = json.loads(line.strip())
-                if 16 < record.get("age_group", 0) <= 18:
+                if 8 < record.get("age_group", 0) <= 12:
                     self.data.append(record)
     def __len__ (self):
         return len(self.data)
@@ -70,7 +70,7 @@ class CovidCNN(nn.Module):
         return out
 
 model = CovidCNN()
-model.load_state_dict(torch.load("/Users/weidai/Desktop/model/age5.pth", weights_only=True))
+model.load_state_dict(torch.load("/Users/weidai/Desktop/model/age3.pth", weights_only=True))
 model.eval()
 
 
@@ -84,19 +84,21 @@ if __name__ == '__main__':
     for i, (image, scores) in enumerate(dataloader):
         output = model(image).squeeze()
         abs_error = torch.abs(output - scores)
-
         max_idx = abs_error.argmax().item()
         min_idx = abs_error.argmin().item()
 
         if abs_error[max_idx].item() >= b:
             b = abs_error[max_idx].item()
             bp = dataset.data[i * 128 + max_idx]["images"][0]
-
+            bc = output[max_idx].item()
         if abs_error[min_idx].item() <= s:
             s = abs_error[min_idx].item()
             sp = dataset.data[i * 128 + min_idx]["images"][0]
+            sc = output[min_idx].item()
 
     print("biggest mae is:" + str(b))
     print("biggest image path is: " + bp)
     print("smallest mae is:" + str(s))
     print("smallest image path is:" + sp)
+    print("biggest score is " + str(bc))
+    print("smallest score is " + str(sc))
